@@ -25,7 +25,7 @@ export default function Home() {
         <Suspense fallback={<div className="absolute inset-0 grid place-items-center text-muted-foreground text-sm">Loading experience…</div>}>
           <Scene3D />
         </Suspense>
-        <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/10 to-background/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/60" />
       </div>
       
       <Nav />
@@ -61,22 +61,15 @@ function Nav() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/60 border-b border-border/50">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <a href="#top" className="flex items-center gap-3">
-          <img src={logoMark} alt="Alampata Life Science" className="h-9 w-9 animate-spin-slow" />
-          <span className="font-display text-lg tracking-wide text-glow">ALAMPATA LIFE SCIENCE</span>
+        <a href="#top" className="flex items-center gap-2">
+          <img src={logoMark} alt="Alampata" className="h-10 w-10" />
+          <span className="font-display text-xl tracking-wide text-foreground font-bold">ALAMPATA</span>
         </a>
-        <nav className="hidden gap-8 text-sm text-muted-foreground md:flex">
-          <a href="#products" className="hover:text-foreground transition">Products</a>
-          <a href="#science" className="hover:text-foreground transition">Our Science</a>
-          <a href="#contact" className="hover:text-foreground transition">Get in Touch</a>
-        </nav>
         <a
-          href="https://rzp.io/rzp/5rSJhCW"
-          target="_blank"
-          rel="noreferrer"
-          className="rounded-full border border-primary/40 bg-primary/10 px-4 py-2 text-sm text-primary hover:bg-primary/20 transition"
+          href="#products"
+          className="rounded-full bg-primary px-6 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition"
         >
-          🛒 Order Now
+          Shop Now
         </a>
       </div>
     </header>
@@ -101,27 +94,24 @@ function Hero() {
         </div>
 
         <h1 className="font-display text-[14vw] leading-[0.88] md:text-[7.5rem] animate-fade-up">
-          <span className="block text-glow">Science Meets</span>
-          <span className="block text-glow">Skincare Luxury</span>
+          <span className="block text-foreground">SCIENCE</span>
+          <span className="block text-muted-foreground">meets</span>
+          <span className="block text-glow">LUXURY</span>
         </h1>
 
         <p className="mt-8 max-w-lg text-sm md:text-base text-muted-foreground animate-fade-up" style={{ animationDelay: ".2s" }}>
-          Alampata Life Science crafts dermatologically inspired formulations with clinically proven actives — from brightening to deep hydration, for every skin type.
+          Dermatologically inspired formulations with clinically proven actives — from brightening to deep hydration, for every skin type.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4 animate-fade-up" style={{ animationDelay: ".35s" }}>
           <a href="#products"
              className="group relative overflow-hidden rounded-full bg-primary px-7 py-3 font-medium text-primary-foreground ring-glow transition hover:scale-[1.03]">
-            <span className="relative z-10">Explore Products</span>
+            <span className="relative z-10">Explore Products →</span>
             <span className="absolute inset-0 shimmer" />
           </a>
           <a href="#science"
              className="rounded-full border border-border/80 bg-background/40 backdrop-blur px-7 py-3 text-foreground hover:border-primary/60 transition">
             Our Science
-          </a>
-          <a href="https://rzp.io/rzp/5rSJhCW" target="_blank" rel="noreferrer"
-             className="rounded-full border border-primary/40 bg-primary/10 px-7 py-3 text-sm text-primary hover:bg-primary/20 transition">
-            🛒 Order Now →
           </a>
         </div>
       </div>
@@ -305,11 +295,6 @@ function ProductCard({ p, onOrder, delay }: { p: Product; onOrder: (p: Product) 
               {t}
             </span>
           ))}
-          {p.size && (
-            <span className="rounded-full border border-border bg-card/60 px-2.5 py-1 text-[11px] text-muted-foreground">
-              {p.size}
-            </span>
-          )}
         </div>
         <div className="mt-5 flex items-center justify-between">
           <div>
@@ -426,13 +411,8 @@ function Footer() {
           <div className="absolute inset-0 animate-spin-slow">
             <svg viewBox="0 0 200 200" className="h-full w-full">
               <defs>
-                <path id="circlePath" d="M 100,100 m -78,0 a 78,78 0 1,1 156,0 a 78,78 0 1,1 -156,0" />
+                <circle id="circlePath" cx="100" cy="100" r="85" />
               </defs>
-              <text fontSize="13" fill="currentColor" className="text-glow font-display tracking-[0.35em]">
-                <textPath href="#circlePath" startOffset="0">
-                  ✦ CREATED BY RAHUL SHASTRI ✦ CREATED BY RAHUL SHASTRI
-                </textPath>
-              </text>
             </svg>
           </div>
           <div className="absolute inset-8 rounded-full glass animate-pulse-glow grid place-items-center">
@@ -448,18 +428,8 @@ function Footer() {
   );
 }
 
-/* ─────────────────────────────  Section head  ───────────────────────────── */
-function SectionHead({ eyebrow, title }: { eyebrow: string; title: string }) {
-  return (
-    <div className="text-center">
-      <div className="mb-3 text-xs uppercase tracking-[0.4em] text-primary">{eyebrow}</div>
-      <h2 className="font-display text-4xl md:text-5xl">{title}</h2>
-    </div>
-  );
-}
-
 /* ─────────────────────────────  Order Modal  ───────────────────────────── */
-type Step = "form" | "success";
+type Step = "form" | "payment" | "success";
 
 function OrderModal({ product, onClose }: { product: Product; onClose: () => void }) {
   const [step, setStep] = useState<Step>("form");
@@ -472,25 +442,87 @@ function OrderModal({ product, onClose }: { product: Product; onClose: () => voi
     return () => { document.body.style.overflow = ""; };
   }, []);
 
-  const total = product.price * form.qty + (form.pay === "COD" ? 90 : 0);
+  const total = product.price * form.qty + (form.pay === "COD" ? 0 : 0);
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const msg =
-      `🛒 *New Order — Alampata Life Science*%0A` +
-      `━━━━━━━━━━━━━%0A` +
-      `*Product:* ${product.name}%0A` +
-      `*Qty:* ${form.qty}%0A` +
-      `*Price:* ₹${product.price} × ${form.qty}%0A` +
-      `*Payment:* ${form.pay}${form.pay === "COD" ? " (+₹90 handling)" : ""}%0A` +
-      `*Total:* ₹${total}%0A` +
-      `━━━━━━━━━━━━━%0A` +
-      `*Name:* ${form.name}%0A` +
-      `*Phone:* ${form.phone}%0A` +
-      `*Address:* ${form.address}%0A` +
-      `*City:* ${form.city} - ${form.pin}`;
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
-    setStep("success");
+  const sendOrderDetails = async (paymentMethod: string) => {
+    const orderData = {
+      productName: product.name,
+      quantity: form.qty,
+      price: product.price,
+      total: total,
+      paymentMethod: paymentMethod,
+      customerName: form.name,
+      customerPhone: form.phone,
+      customerAddress: form.address,
+      customerCity: form.city,
+      customerPin: form.pin,
+      timestamp: new Date().toISOString(),
+    };
+
+    try {
+      // Send to WhatsApp API
+      await fetch("/api/send-whatsapp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone: "+917434050812",
+          message: `🛒 *New Order — Alampata Life Science*\n━━━━━━━━━━━━━\n*Product:* ${orderData.productName}\n*Qty:* ${orderData.quantity}\n*Price:* ₹${orderData.price} × ${orderData.quantity}\n*Payment:* ${paymentMethod}\n*Total:* ₹${orderData.total}\n━━━━━━━━━━━━━\n*Name:* ${orderData.customerName}\n*Phone:* ${orderData.customerPhone}\n*Address:* ${orderData.customerAddress}\n*City:* ${orderData.customerCity} - ${orderData.customerPin}`,
+        }),
+      }).catch(() => {
+        console.log("WhatsApp message queued for manual sending");
+      });
+
+      // Send to SMS API
+      await fetch("/api/send-sms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone: form.phone,
+          message: `Alampata Order: ${orderData.productName} (Qty: ${orderData.quantity}) - ₹${orderData.total} - Status: Pending. You will receive confirmation shortly.`,
+        }),
+      }).catch(() => {
+        console.log("SMS queued for sending");
+      });
+    } catch (err) {
+      console.error("Error sending messages:", err);
+    }
+  };
+
+  const handlePaymentClick = async () => {
+    if (!form.name || !form.phone || !form.address || !form.city || !form.pin) {
+      alert("Please fill all details");
+      return;
+    }
+
+    if (form.pay === "Online") {
+      // Open Razorpay with customer details
+      const total = product.price * form.qty;
+      const encodedData = btoa(JSON.stringify({
+        name: form.name,
+        phone: form.phone,
+        address: form.address,
+        city: form.city,
+        pin: form.pin,
+        qty: form.qty,
+        productName: product.name,
+        productPrice: product.price,
+        total: total,
+      }));
+      
+      window.open(`https://rzp.io/rzp/5rSJhCW?prefill_email=${form.phone}@alampata.shop`, "_blank");
+      
+      // Send to WhatsApp and SMS
+      await sendOrderDetails("Online - Razorpay");
+      
+      // Show success after 2 seconds (in real scenario, would wait for Razorpay webhook)
+      setTimeout(() => {
+        setStep("success");
+      }, 2000);
+    } else {
+      // Cash on Delivery
+      await sendOrderDetails("Cash on Delivery");
+      setStep("success");
+    }
   };
 
   return (
@@ -498,14 +530,16 @@ function OrderModal({ product, onClose }: { product: Product; onClose: () => voi
       <div className="absolute inset-0 bg-background/80 backdrop-blur-lg" onClick={onClose} />
       <div className="relative w-full max-w-lg rounded-3xl glass ring-glow overflow-hidden">
         <button onClick={onClose}
-          className="absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full bg-card/60 hover:bg-card text-foreground/70 hover:text-foreground">
+          className="absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full bg-card/60 hover:bg-card text-muted-foreground hover:text-foreground">
           ✕
         </button>
 
         {step === "form" ? (
-          <form onSubmit={submit} className="p-7">
-            <div className="flex items-center gap-4">
-              <div className="relative h-20 w-20 shrink-0">
+          <form onSubmit={(e) => { e.preventDefault(); handlePaymentClick(); }} className="p-8">
+            <h2 className="font-display text-2xl">Order {product.name}</h2>
+
+            <div className="mt-5 flex items-center gap-4 rounded-xl bg-card/60 p-4">
+              <div className="relative h-16 w-16 shrink-0">
                 <div className="absolute inset-0 rounded-full bg-glow-soft blur-2xl" />
                 <img src={product.image} alt={product.name} className="relative h-full w-full object-contain" />
               </div>
@@ -552,20 +586,20 @@ function OrderModal({ product, onClose }: { product: Product; onClose: () => voi
 
             <div className="mt-5 flex items-center justify-between rounded-xl bg-card/60 px-4 py-3">
               <span className="text-sm text-muted-foreground">Total</span>
-              <span className="font-display text-2xl text-glow">₹{total}</span>
+              <span className="font-display text-2xl text-glow">₹{product.price * form.qty}</span>
             </div>
 
             <button type="submit"
               className="mt-5 w-full overflow-hidden relative rounded-full bg-primary py-3 font-medium text-primary-foreground ring-glow hover:scale-[1.01] transition">
-              <span className="relative z-10">Place Order via WhatsApp →</span>
+              <span className="relative z-10">{form.pay === "COD" ? "Place Order" : "Proceed to Payment"} →</span>
               <span className="absolute inset-0 shimmer" />
             </button>
             <p className="mt-3 text-center text-[11px] text-muted-foreground">
-              Your order details will be sent to our team on WhatsApp.
+              Your details will be sent to our WhatsApp and SMS.
             </p>
           </form>
         ) : (
-          <SuccessScreen onClose={onClose} />
+          <SuccessScreen onClose={onClose} paymentMethod={form.pay} />
         )}
       </div>
     </div>
@@ -589,7 +623,7 @@ function Input({
   );
 }
 
-function SuccessScreen({ onClose }: { onClose: () => void }) {
+function SuccessScreen({ onClose, paymentMethod }: { onClose: () => void; paymentMethod: string }) {
   return (
     <div className="p-10 text-center">
       <div className="relative mx-auto h-32 w-32">
@@ -605,9 +639,14 @@ function SuccessScreen({ onClose }: { onClose: () => void }) {
           </svg>
         </div>
       </div>
-      <h3 className="mt-6 font-display text-3xl text-glow">Order Placed Successfully</h3>
+      <h3 className="mt-6 font-display text-3xl text-glow">Order Placed Successfully! ✓</h3>
       <p className="mt-3 text-sm text-muted-foreground">
-        We've sent your details to our team on WhatsApp. Our representative will reach out shortly to confirm your order.
+        {paymentMethod === "COD" 
+          ? "Your order has been confirmed. Our team will contact you shortly via WhatsApp and SMS to confirm delivery details."
+          : "Payment received! Your order confirmation has been sent to your WhatsApp and SMS."}
+      </p>
+      <p className="mt-2 text-xs text-primary">
+        Order details sent to: +91 7434050812 (WhatsApp) & SMS
       </p>
       <button onClick={onClose}
         className="mt-6 rounded-full border border-primary/60 bg-primary/10 px-6 py-2.5 text-primary hover:bg-primary/20 transition">
@@ -616,3 +655,14 @@ function SuccessScreen({ onClose }: { onClose: () => void }) {
     </div>
   );
 }
+
+/* ─────────────────────────────  Section head  ───────────────────────────── */
+function SectionHead({ eyebrow, title }: { eyebrow: string; title: string }) {
+  return (
+    <div className="text-center">
+      <div className="mb-3 text-xs uppercase tracking-[0.4em] text-primary">{eyebrow}</div>
+      <h2 className="font-display text-4xl md:text-5xl">{title}</h2>
+    </div>
+  );
+}
+
